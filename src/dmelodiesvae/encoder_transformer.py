@@ -37,7 +37,6 @@ class EncoderTransformer(Model):
         self.transformer = self.transformer_class(
             encoder_layer,
             num_layers = self.num_layers,
-            dropout=self.dropout,
             bidirectional=self.bidirectional,
             batch_first=True
         )
