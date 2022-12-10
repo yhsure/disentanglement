@@ -59,15 +59,16 @@ class DMelodiesVAE(Model):
         self.has_metadata = has_metadata
         self.num_notes = 62  # TODO: remove this hardcoding
         # Encoder
-        self.encoder = Encoder(
+        self.encoder = EncoderTransformer(
             note_embedding_dim=self.note_embedding_dim,
-            rnn_hidden_size=self.encoder_hidden_size,
+            rnn_hidden_size=None,
             num_layers=self.num_encoder_layers,
             num_notes=self.num_notes,
             dropout=self.encoder_dropout_prob,
-            bidirectional=True,
+            bidirectional=None,
             z_dim=self.latent_space_dim,
-            rnn_class=nn.GRU
+            transformer_layer_class=nn.TransformerEncoderLayer,
+            transformer_class=nn.TransformerEncoder,
         )
 
         # Decoder
