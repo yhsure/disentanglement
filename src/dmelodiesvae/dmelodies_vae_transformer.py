@@ -3,7 +3,7 @@ from torch import nn
 from torch.autograd import Variable
 
 from src.dmelodiesvae.decoder import HierarchicalDecoder
-from src.dmelodiesvae.encoder import Encoder
+from src.dmelodiesvae.encoder_transformer import EncoderTransformer
 from src.utils.helpers import to_cuda_variable
 from src.utils.model import Model
 
