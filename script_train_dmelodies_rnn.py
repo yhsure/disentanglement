@@ -21,8 +21,8 @@ model_dict = {
         'beta_list': [1.0]
     }
 }
-num_epochs = 100
-batch_size = 512
+num_epochs = 10 #100
+batch_size = 1024 #512
 
 c_list = model_dict[m]['capacity_list']
 b_list = model_dict[m]['beta_list']
@@ -39,7 +39,7 @@ for seed in seed_list:
                 model_type=m,
                 beta=b,
                 capacity=c,
-                lr=1e-4,
+                lr=2e-4,  #1e-4
                 rand=seed
             )
             if not os.path.exists(vae_model.filepath):

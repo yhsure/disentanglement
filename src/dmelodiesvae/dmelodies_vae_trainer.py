@@ -139,18 +139,21 @@ class DMelodiesVAETrainer(Trainer):
 
         # log values
         if flag:
-            self.writer.add_scalar(
+            #self.writer.add_scalar(
+            print(
                 'loss_split/recons_loss', recons_loss.item(), epoch_num
             )
-            self.writer.add_scalar(
+            #self.writer.add_scalar(
+            print(
                 'loss_split/dist_loss', dist_loss.item(), epoch_num
             )
-            self.writer.add_scalar(
-                'params/beta', self.cur_beta, epoch_num
-            )
-            self.writer.add_scalar(
-                'params/capacity', self.cur_capacity, epoch_num
-            )
+            print(f"beta: {self.cur_beta}, cap: {self.cur_capacity}")
+            #self.writer.add_scalar(
+            #    'params/beta', self.cur_beta, epoch_num
+            #)
+            #self.writer.add_scalar(
+            #    'params/capacity', self.cur_capacity, epoch_num
+            #)
 
         # compute accuracy
         accuracy = self.mean_accuracy(
@@ -193,7 +196,7 @@ class DMelodiesVAETrainer(Trainer):
             os.path.dirname(self.model.filepath),
             'results_dict.json'
         )
-        batch_size = 512
+        batch_size = 1024
         _, _, gen_test = self.dataset.data_loaders(batch_size=batch_size, split=(0.70, 0.20))
         latent_codes, attributes, attr_list = self.compute_representations(gen_test)
         self.metrics.update(compute_mig(latent_codes, attributes))
