@@ -53,7 +53,7 @@ class EncoderTransformer(Model):
 
         encoder_layer = self.transformer_layer_class(
             d_model=note_embedding_dim,
-            nhead=4,
+            nhead=8,
             dim_feedforward=256 * 8,
             dropout=self.dropout,
             activation='relu',
@@ -127,13 +127,15 @@ class EncoderTransformer(Model):
 
         batch_size, measure_seq_len = score_tensor.size()
 
+        score_tensor_mask = generate_square_subsequent_mask(measure_seq_len)
+
         # embed score
         embedded_seq = self.embed_forward(score_tensor=score_tensor) * math.sqrt(self.note_embedding_dim)
         embedded_seq = self.pos_encoder(embedded_seq)
 
         # pass through RNN
-        out = self.transformer(embedded_seq)
-        out = out.transpose(0, 1).contiguous()
+        out = self.transformer(embedded_seq, score_tensor_mask)
+        # out = out.transpose(0, 1).contiguous()
         out = out.view(batch_size, -1)
 
 
@@ -143,3 +145,7 @@ class EncoderTransformer(Model):
 
         z_distribution = distributions.Normal(loc=z_mean, scale=torch.exp(z_log_std))
         return z_distribution
+
+def generate_square_subsequent_mask(sz: int) -> Tensor:
+    """Generates an upper-triangular matrix of -inf, with zeros on diag."""
+    return to_cuda_variable(torch.triu(torch.ones(sz, sz) * float('-inf'), diagonal=1))
