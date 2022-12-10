@@ -1,9 +1,32 @@
+import math
+
 import torch
-from torch import distributions, nn
+from torch import Tensor, distributions, nn
 
 from src.utils.helpers import to_cuda_variable
 from src.utils.model import Model
 
+
+class PositionalEncoding(nn.Module):
+
+    def __init__(self, d_model: int, dropout: float = 0.1, max_len: int = 5000):
+        super().__init__()
+        self.dropout = nn.Dropout(p=dropout)
+
+        position = torch.arange(max_len).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
+        pe = torch.zeros(max_len, 1, d_model)
+        pe[:, 0, 0::2] = torch.sin(position * div_term)
+        pe[:, 0, 1::2] = torch.cos(position * div_term)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        Args:
+            x: Tensor, shape [seq_len, batch_size, embedding_dim]
+        """
+        x = x + self.pe[:x.size(0)]
+        return self.dropout(x)
 
 class EncoderTransformer(Model):
     def __init__(self,
@@ -26,10 +49,12 @@ class EncoderTransformer(Model):
         self.transformer_layer_class = transformer_layer_class
         self.transformer_class = transformer_class
 
+        self.pos_encoder = PositionalEncoding(note_embedding_dim, dropout)
+
         encoder_layer = self.transformer_layer_class(
             d_model=note_embedding_dim,
             nhead=4,
-            dim_feedforward=256,
+            dim_feedforward=256 * 8,
             dropout=self.dropout,
             activation='relu',
             batch_first=True
@@ -38,6 +63,7 @@ class EncoderTransformer(Model):
             encoder_layer,
             num_layers = self.num_layers,
         )
+
         self.num_notes = num_notes
         self.note_embedding_layer = nn.Embedding(self.num_notes,
                                                  self.note_embedding_dim)
@@ -45,16 +71,16 @@ class EncoderTransformer(Model):
         self.num_linear_layers = 256
         self.linear_mean = nn.Sequential(
             nn.Linear(self.num_directions * self.num_linear_layers,
-                      self.num_directions),
+                      self.num_directions * (256 // 2)),
             nn.SELU(),
-            nn.Linear(self.num_directions, z_dim)
+            nn.Linear(self.num_directions * (256 // 2), z_dim)
         )
 
         self.linear_log_std = nn.Sequential(
             nn.Linear(self.num_directions * self.num_linear_layers,
-                      self.num_directions),
+                      self.num_directions * (256 // 2)),
             nn.SELU(),
-            nn.Linear(self.num_directions, z_dim)
+            nn.Linear(self.num_directions * (256 // 2), z_dim)
         )
 
         self.xavier_initialization()
@@ -102,12 +128,14 @@ class EncoderTransformer(Model):
         batch_size, measure_seq_len = score_tensor.size()
 
         # embed score
-        embedded_seq = self.embed_forward(score_tensor=score_tensor)
+        embedded_seq = self.embed_forward(score_tensor=score_tensor) * math.sqrt(self.note_embedding_dim)
+        embedded_seq = self.pos_encoder(embedded_seq)
 
         # pass through RNN
         out = self.transformer(embedded_seq)
         out = out.transpose(0, 1).contiguous()
         out = out.view(batch_size, -1)
+
 
         # compute distribution parameters
         z_mean = self.linear_mean(out)

@@ -1,5 +1,7 @@
+import math
+
 import torch
-from torch import nn
+from torch import Tensor, nn
 from torch.autograd import Variable
 
 from src.dmelodiesvae.decoder import HierarchicalDecoder
@@ -14,7 +16,7 @@ class DMelodiesVAE(Model):
             dataset,
             note_embedding_dim=16,
             metadata_embedding_dim=2,
-            num_encoder_layers=2,
+            num_encoder_layers=6,
             encoder_hidden_size=64,
             encoder_dropout_prob=0.2,
             latent_space_dim=32,
