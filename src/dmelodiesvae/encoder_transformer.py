@@ -37,22 +37,21 @@ class EncoderTransformer(Model):
         self.transformer = self.transformer_class(
             encoder_layer,
             num_layers = self.num_layers,
-            bidirectional=self.bidirectional,
-            batch_first=True
         )
         self.num_notes = num_notes
         self.note_embedding_layer = nn.Embedding(self.num_notes,
                                                  self.note_embedding_dim)
 
+        self.num_linear_layers = 256
         self.linear_mean = nn.Sequential(
-            nn.Linear(self.num_directions * self.num_layers,
+            nn.Linear(self.num_directions * self.num_linear_layers,
                       self.num_directions),
             nn.SELU(),
             nn.Linear(self.num_directions, z_dim)
         )
 
         self.linear_log_std = nn.Sequential(
-            nn.Linear(self.num_directions * self.num_layers,
+            nn.Linear(self.num_directions * self.num_linear_layers,
                       self.num_directions),
             nn.SELU(),
             nn.Linear(self.num_directions, z_dim)
