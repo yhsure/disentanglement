@@ -23,7 +23,7 @@ model_dict = {
     }
 }
 num_epochs = 10 #100
-batch_size = 4086 #512
+batch_size = 512 #512
 
 c_list = model_dict[m]['capacity_list']
 b_list = model_dict[m]['beta_list']
