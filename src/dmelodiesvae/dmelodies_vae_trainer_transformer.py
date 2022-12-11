@@ -206,6 +206,11 @@ class DMelodiesVAETrainer(Trainer):
         self.metrics.update(compute_modularity(latent_codes, attributes))
         self.metrics.update(compute_sap_score(latent_codes, attributes))
         self.metrics.update(self.test_model(batch_size=batch_size))
+
+        basedir = os.path.dirname(results_fp)
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
+        
         with open(results_fp, 'w') as outfile:
             json.dump(self.metrics, outfile, indent=2)
         return self.metrics
