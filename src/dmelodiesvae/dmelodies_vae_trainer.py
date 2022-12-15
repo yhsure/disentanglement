@@ -6,7 +6,7 @@ import music21
 from typing import Tuple
 
 from src.utils.trainer import Trainer
-from src.dmelodiesvae.dmelodies_vae_transformer import DMelodiesVAE
+from src.dmelodiesvae.dmelodies_vae import DMelodiesVAE
 from src.utils.helpers import to_cuda_variable_long, to_cuda_variable, to_numpy
 from src.utils.evaluation import *
 
@@ -182,6 +182,7 @@ class DMelodiesVAETrainer(Trainer):
         return latent_codes, attributes, attr_list
 
     def eval_model(self, data_loader, epoch_num=0):
+        return None # do not do eval during training
         if self.writer is not None:
             # evaluation takes time due to computation of metrics
             # so we skip it during training epochs
