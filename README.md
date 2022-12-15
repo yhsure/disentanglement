@@ -12,10 +12,10 @@ We observe that using a transformer architecture for encoding the music scores r
 We train and evaluate our model on the [dMelodies data set](https://github.com/ashispati/dmelodies_dataset) [1] which is a synthetic data set that comprises of 2-bar monophonic melodies where each melody is the result of a unique combination of [nine latent factors](https://github.com/ashispati/dmelodies_dataset#factors-of-variation).
 
 ## dMelodies baseline
-The authors authors also published benchmark experiments that will serve as the baseline for our experiments. Their [benchmark implementations](https://github.com/ashispati/dmelodies_benchmarking) is used as the basis for our project implementation.
+The authors authors also published benchmark experiments that will serve as the baseline for our experiments. Their [benchmark implementation](https://github.com/ashispati/dmelodies_benchmarking) is used as the basis for our project implementation.
 
 ## Usage
-To use dMelodies, simply clone the repository and install the required dependencies (`python>=3.7.15`):
+To use the code, simply clone the repository and install the required dependencies (`python>=3.7.15`):
 
 ```bash
 $ git clone https://github.com/yhsure/nlp
@@ -30,7 +30,7 @@ Then, run the training script to reproduce the results:
 $ !PYTHONPATH=dmelodies_dataset python3 train_transformer.py
 ```
 
-or alternatively, to reproduce the baseline results:
+To reproduce baseline results:
 
 ```bash
 $ !PYTHONPATH=dmelodies_dataset python3 train_baseline.py
