@@ -1,5 +1,7 @@
 # NLP Final Project - Music Disentangling
 
+This is the code for our submission for the final project of the Natural Language Processing course at Seoul National University.
+
 Music and natural language processing (NLP) are two areas of research that have traditionally been studied separately. However, recent advances in machine learning have shown that it is possible to use techniques from one domain to improve performance in the other.
 
 In this project, we investigate the use of a transformer architecture for music disentanglement. This architecture has been shown to be effective for encoding sequences in natural language processing tasks.
