@@ -2,17 +2,17 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 
+from src.dmelodiesvae.decoder import HierarchicalDecoder
+from src.dmelodiesvae.encoder import Encoder
 from src.utils.helpers import to_cuda_variable
 from src.utils.model import Model
-from src.dmelodiesvae.encoder import Encoder
-from src.dmelodiesvae.decoder import HierarchicalDecoder
 
 
 class DMelodiesVAE(Model):
     def __init__(
             self,
             dataset,
-            note_embedding_dim=10,
+            note_embedding_dim=16,
             metadata_embedding_dim=2,
             num_encoder_layers=2,
             encoder_hidden_size=64,

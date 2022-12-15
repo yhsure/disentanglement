@@ -1,14 +1,15 @@
-import os
 import json
-import torch
-from tqdm import tqdm
-import music21
+import os
 from typing import Tuple
 
-from src.utils.trainer import Trainer
+import music21
+import torch
+from tqdm import tqdm
+
 from src.dmelodiesvae.dmelodies_vae_transformer import DMelodiesVAE
-from src.utils.helpers import to_cuda_variable_long, to_cuda_variable, to_numpy
 from src.utils.evaluation import *
+from src.utils.helpers import to_cuda_variable, to_cuda_variable_long, to_numpy
+from src.utils.trainer import Trainer
 
 LATENT_ATTRIBUTES = {
     'tonic': 0,
@@ -205,6 +206,11 @@ class DMelodiesVAETrainer(Trainer):
         self.metrics.update(compute_modularity(latent_codes, attributes))
         self.metrics.update(compute_sap_score(latent_codes, attributes))
         self.metrics.update(self.test_model(batch_size=batch_size))
+
+        basedir = os.path.dirname(results_fp)
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
+        
         with open(results_fp, 'w') as outfile:
             json.dump(self.metrics, outfile, indent=2)
         return self.metrics
