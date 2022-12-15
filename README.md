@@ -1,6 +1,6 @@
-# NLP Final Project - Music Disentangling
+# Disentanglement learning for symbolic music
 
-Codebase for submission of the final project of the Natural Language Processing course at Seoul National University, fall semester 2022.
+Codebase for the final project in Natural Language Processing at Seoul National University, fall 2022.
 
 Music and natural language processing (NLP) are two areas of research that have traditionally been studied separately. However, recent advances in machine learning have shown that it is possible to use techniques from one domain to improve performance in the other.
 
