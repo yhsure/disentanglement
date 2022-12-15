@@ -1,4 +1,5 @@
 import os
+
 import torch
 from torch import nn
 
@@ -93,5 +94,9 @@ class Model(torch.nn.Module):
         :return:
         """
         for name, param in self.named_parameters():
-            if 'weight' in name:
+            if 'bias' in name:
+                nn.init.constant_(param, 0.0)
+            if 'norm' in name:
+                nn.init.constant_(param, 1.0)
+            elif 'weight' in name:
                 nn.init.xavier_normal_(param)
